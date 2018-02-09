@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/satori/go.uuid"
+	"github.com/vjeantet/grok"
 	"golang.org/x/text/transform"
 
 	"github.com/elastic/beats/libbeat/beat"
@@ -214,6 +215,11 @@ func (h *Harvester) Run() error {
 	}()
 
 	logp.Info("Harvester started for file: %s", h.state.Source)
+	//Init Grok Handler if Pattern Exist
+	grok_instance = nil
+	if config.GrokPattern != "" {
+		grok_instance, _ := grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
+	}
 
 	for {
 		select {
@@ -264,7 +270,11 @@ func (h *Harvester) Run() error {
 		}
 
 		text := string(message.Content)
-
+		//ADD GROK HANDLE
+		var json_text = common.MapStr
+		if grok_instance != nil {
+			json_text, _ := grok_instance.Parse(config.GrokPattern, text)
+		}
 		// Check if data should be added to event. Only export non empty events.
 		if !message.IsEmpty() && h.shouldExportLine(text) {
 			fields := common.MapStr{

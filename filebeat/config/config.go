@@ -26,7 +26,6 @@ type Config struct {
 	RegistryFile    string               `config:"registry_file"`
 	RegistryFlush   time.Duration        `config:"registry_flush"`
 	ConfigDir       string               `config:"config_dir"`
-	GrokPattern     string               `config:"grok_pattern"`
 	ShutdownTimeout time.Duration        `config:"shutdown_timeout"`
 	Modules         []*common.Config     `config:"modules"`
 	ConfigInput     *common.Config       `config:"config.prospectors"`

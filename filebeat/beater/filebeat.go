@@ -53,7 +53,6 @@ func New(b *beat.Beat, rawConfig *common.Config) (beat.Beater, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if len(config.Prospectors) > 0 {
 		cfgwarn.Deprecate("7.0.0", "prospectors are deprecated, Use `inputs` instead.")
 		if len(config.Inputs) > 0 {
@@ -328,7 +327,7 @@ func (fb *Filebeat) Run(b *beat.Beat) error {
 
 // Stop is called on exit to stop the crawling, spooling and registration processes.
 func (fb *Filebeat) Stop() {
-	logp.Info("Stopping filebeat")
+	logp.Info("Stopping filebeat........")
 
 	// Stop Filebeat
 	close(fb.done)

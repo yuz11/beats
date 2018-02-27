@@ -216,10 +216,7 @@ func (h *Harvester) Run() error {
 
 	logp.Info("Harvester started for file: %s", h.state.Source)
 	//Init Grok Handler if Pattern Exist
-	grok_instance = nil
-	if config.GrokPattern != "" {
-		grok_instance, _ := grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
-	}
+	grok_instance, _ := grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for {
 		select {
@@ -270,11 +267,6 @@ func (h *Harvester) Run() error {
 		}
 
 		text := string(message.Content)
-		//ADD GROK HANDLE
-		var json_text = common.MapStr
-		if grok_instance != nil {
-			json_text, _ := grok_instance.Parse(config.GrokPattern, text)
-		}
 		// Check if data should be added to event. Only export non empty events.
 		if !message.IsEmpty() && h.shouldExportLine(text) {
 			fields := common.MapStr{
@@ -282,6 +274,14 @@ func (h *Harvester) Run() error {
 				"offset": state.Offset, // Offset here is the offset before the starting char.
 			}
 			fields.DeepUpdate(message.Fields)
+
+			//ADD GROK HANDLE
+			if len(h.config.GrokPattern) > 0 {
+				json_text, _ := grok_instance.Parse(h.config.GrokPattern[0], text)
+				for k, v := range json_text {
+					fields[k] = v
+				}
+			}
 
 			// Check if json fields exist
 			var jsonFields common.MapStr

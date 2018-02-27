@@ -27,7 +27,7 @@ filebeat.prospectors:
   paths:
     - /var/log/*.log
     #- c:\programdata\elasticsearch\logs\*
-  grok_pattern: ["%{WORD:msg_type}\\|%{DATA:time}\\|%{NUMBER:ts}\\|%{DATA:process}\\|%{DATA:device}\\|%{WORD:rest_content}"]
+  grok_pattern: ["%{WORD:msg_type}\\|%{DATA:time}\\|%{NUMBER:ts}\\|%{DATA:process}\\|%{DATA:device}@%{DATA:device_type}\\|%{DATA:callInfoList}\\|%{WORD:isConnected}\\|%{WORD:statusCodeStr}\\|%{NUMBER:statusCode}\\|%{DATA:startTime}\\|%{DATA:endTime}\\|%{NUMBER:duration}"]
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
   # matching any regular expression from the list.

@@ -147,8 +147,14 @@ func makeKafka(
 	if err != nil {
 		return outputs.Fail(err)
 	}
+	kafka_key := ""
+	if config.Key == "" {
+		kafka_key = beat.Hostname
+	} else {
+		kafka_key = config.Key
+	}
 
-	client, err := newKafkaClient(observer, hosts, beat.Beat, config.Key, topic, codec, libCfg)
+	client, err := newKafkaClient(observer, hosts, beat.Beat, kafka_key, topic, codec, libCfg)
 	if err != nil {
 		return outputs.Fail(err)
 	}

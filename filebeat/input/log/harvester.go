@@ -308,6 +308,13 @@ func (h *Harvester) Run() error {
 			}
 
 			data.Event.Fields = fields
+			//If topic field exists, add on message header
+			if h.config.KafkaTopic != "" {
+				if data.Event.Meta == nil {
+					data.Event.Meta = common.MapStr{}
+				}
+				data.Event.Meta["topic"] = h.config.KafkaTopic
+			}
 		}
 
 		// Always send event to update state, also if lines was skipped

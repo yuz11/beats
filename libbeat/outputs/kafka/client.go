@@ -8,7 +8,6 @@ import (
 
 	"github.com/Shopify/sarama"
 
-	"github.com/elastic/beats/libbeat/common/fmtstr"
 	"github.com/elastic/beats/libbeat/logp"
 	"github.com/elastic/beats/libbeat/outputs"
 	"github.com/elastic/beats/libbeat/outputs/codec"
@@ -20,7 +19,7 @@ type client struct {
 	observer outputs.Observer
 	hosts    []string
 	topic    outil.Selector
-	key      *fmtstr.EventFormatString
+	key      string
 	index    string
 	codec    codec.Codec
 	config   sarama.Config
@@ -48,7 +47,7 @@ func newKafkaClient(
 	observer outputs.Observer,
 	hosts []string,
 	index string,
-	key *fmtstr.EventFormatString,
+	key string,
 	topic outil.Selector,
 	writer codec.Codec,
 	cfg *sarama.Config,
@@ -169,10 +168,8 @@ func (c *client) getEventMessage(data *publisher.Event) (*message, error) {
 		msg.ts = event.Timestamp
 	}
 
-	if c.key != nil {
-		if key, err := c.key.RunBytes(event); err == nil {
-			msg.key = key
-		}
+	if c.key != "" {
+		msg.key = []byte(c.key)
 	}
 
 	return msg, nil

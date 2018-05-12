@@ -35,6 +35,7 @@ var (
 		ScanSort:       "",
 		ScanOrder:      "asc",
 		RecursiveGlob:  true,
+		KafkaTopic:     "",
 
 		// Harvester
 		BufferSize: 16 * humanize.KiByte,
@@ -66,6 +67,7 @@ type config struct {
 	IgnoreOlder    time.Duration   `config:"ignore_older"`
 	Paths          []string        `config:"paths"`
 	GrokPattern    []string        `config:"grok_pattern"`
+	KafkaTopic     string          `config:"kafka_topic"`
 	ScanFrequency  time.Duration   `config:"scan_frequency" validate:"min=0,nonzero"`
 	CleanRemoved   bool            `config:"clean_removed"`
 	HarvesterLimit uint32          `config:"harvester_limit" validate:"min=0"`
